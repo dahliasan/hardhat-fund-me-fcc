@@ -52,13 +52,13 @@ contract FundMe {
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 
-    // receive() external payable {
-    //     fund();
-    // }
+    receive() external payable {
+        fund();
+    }
 
-    // fallback() external payable {
-    //     fund();
-    // }
+    fallback() external payable {
+        fund();
+    }
 
     /// @notice This function funds this contract
     /// @dev This implements price feeds as our library
@@ -66,12 +66,12 @@ contract FundMe {
         // require(
         //     msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD,
         //     "You need to spend more ETH!"
-        // );  // 1e18 == 1 * 10 ** 18 == 1 000 000 000 000 000 000 000 wei == 1  ETH
+        // ); // 1e18 == 1 * 10 ** 18 == 1 000 000 000 000 000 000 000 wei == 1  ETH
 
         if (msg.value.getConversionRate(s_priceFeed) < MINIMUM_USD)
             revert FundMe__NotEnoughEth();
         s_funders.push(msg.sender);
-        s_addressToAmountFunded[msg.sender] = msg.value;
+        s_addressToAmountFunded[msg.sender] += msg.value;
     }
 
     /// @notice This function allows contract owner to withdraw funds
